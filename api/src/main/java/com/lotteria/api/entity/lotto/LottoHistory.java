@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -51,5 +53,9 @@ public class LottoHistory {
     private Date updateDate;
 
     @Transient
-    private List<Integer> numberList;
+    private List<Integer> numberList() {
+        return new ArrayList<>(
+                Arrays.asList(this.num1, this.num2, this.num3, this.num4, this.num5, this.num6)
+        );
+    }
 }
