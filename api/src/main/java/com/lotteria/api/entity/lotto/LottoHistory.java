@@ -52,10 +52,17 @@ public class LottoHistory {
     @Column(name = "update_date")
     private Date updateDate;
 
+    @Column(name = "create_date")
+    private Date createDate;
+
     @Transient
-    private List<Integer> numberList() {
-        return new ArrayList<>(
+    private List<Integer> numberList;
+
+    @Transient
+    public void setNumberList() {
+        this.numberList = new ArrayList<>(
                 Arrays.asList(this.num1, this.num2, this.num3, this.num4, this.num5, this.num6)
         );
     }
+
 }
