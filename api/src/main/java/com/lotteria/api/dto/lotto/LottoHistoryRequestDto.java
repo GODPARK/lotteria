@@ -3,16 +3,15 @@ package com.lotteria.api.dto.lotto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lotteria.api.entity.lotto.LottoHistory;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 import java.util.Comparator;
 import java.util.List;
 
-@ToString @Getter @Setter
+@ToString @Getter @Setter @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class LottoHistoryRequestDto {
 
     @Positive
