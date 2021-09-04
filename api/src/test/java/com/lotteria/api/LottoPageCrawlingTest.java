@@ -25,4 +25,9 @@ public class LottoPageCrawlingTest {
         logger.info(this.lottoCrawlingComponent.getNumberBydHLottoInHtmLatest().toString());
     }
 
+    @Test
+    public void checkLottoStatistics() {
+        logger.info(this.lottoCrawlingComponent.getStatistics().toString());
+    }
+
 }

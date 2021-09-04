@@ -1,6 +1,7 @@
 package com.lotteria.api.service.lotto;
 
 import com.lotteria.api.dto.lotto.LottoHistoryRequestDto;
+import com.lotteria.api.dto.lotto.LottoResultRequestDto;
 import com.lotteria.api.dto.lotto.LottoResultResponseDto;
 import com.lotteria.api.entity.lotto.LottoHistory;
 import com.lotteria.api.exception.BadRequestException;
@@ -66,12 +67,12 @@ public class LottoHistoryService {
         return this.insertUpdateLottoHistory(lottoHistory);
     }
 
-    public LottoResultResponseDto resultLottoHistory(LottoHistoryRequestDto lottoHistoryRequestDto) {
-        if(!lottoHistoryRequestDto.validationCheck()) throw new BadRequestException("request validation check");
-        LottoHistory lottoHistory = this.searchLottoByRoundNum(lottoHistoryRequestDto.getRoundNum());
+    public LottoResultResponseDto resultLottoHistory(LottoResultRequestDto lottoResultRequestDto) {
+        if(!lottoResultRequestDto.validationCheck()) throw new BadRequestException("request validation check");
+        LottoHistory lottoHistory = this.searchLottoByRoundNum(lottoResultRequestDto.getRoundNum());
         lottoHistory.setNumberList();
         List<Integer> compareList = new ArrayList<>(lottoHistory.getNumberList());
-        compareList.retainAll(lottoHistoryRequestDto.getNumberList());
+        compareList.retainAll(lottoResultRequestDto.getNumberList());
 
         LottoResultResponseDto lottoResultResponseDto = LottoResultResponseDto.builder()
                 .roundNum(lottoHistory.getRoundNum())
@@ -81,9 +82,9 @@ public class LottoHistoryService {
                 .build();
         if (compareList.size() == 6 ) {
             lottoResultResponseDto.setResult("1등");
-        } else if (compareList.size() == 5 && lottoHistory.getBonus() == lottoHistoryRequestDto.getBonus()) {
+        } else if (compareList.size() == 5 && lottoResultRequestDto.getNumberList().contains(lottoHistory.getBonus())) {
             lottoResultResponseDto.setResult("2등");
-        } else if (compareList.size() == 5 && lottoHistory.getBonus() != lottoHistoryRequestDto.getBonus() ) {
+        } else if (compareList.size() == 5 && !lottoResultRequestDto.getNumberList().contains(lottoHistory.getBonus()) ) {
             lottoResultResponseDto.setResult("3등");
         } else if (compareList.size() == 4) {
             lottoResultResponseDto.setResult("4등");

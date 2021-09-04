@@ -2,6 +2,7 @@ package com.lotteria.api.component.lotto;
 
 import com.lotteria.api.dto.lotto.LottoHistoryRequestDto;
 import com.lotteria.api.dto.lotto.LottoResultResponseDto;
+import com.lotteria.api.entity.lotto.LottoStatistics;
 import com.lotteria.api.exception.ServerErrorException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -155,5 +156,45 @@ public class LottoCrawlingComponent {
         if (lottoHistoryList.size() != 6) throw new ServerErrorException("lotto number list size 0");
         lottoHistoryRequestDto.setNumberList(lottoHistoryList);
         return lottoHistoryRequestDto;
+    }
+
+    public List<LottoStatistics> getStatistics() {
+        String requestUri = UriComponentsBuilder
+                .fromHttpUrl(this.dhLotteryUri)
+                .queryParam("method", "statByNumber").toUriString();
+
+        ResponseEntity<String> responseEntity = this.restTemplate.exchange(
+                requestUri,
+                HttpMethod.GET,
+                httpEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() != HttpStatus.OK) {
+            logger.info("Dh lottery site is error : " + responseEntity.getStatusCode());
+            throw new ServerErrorException("lotto site not available");
+        }
+
+        if (responseEntity.getBody() == null) throw new ServerErrorException("lotto body is null");
+
+        String cleanResponseString = responseEntity.getBody()
+                .replaceAll("[\\r|\\t]", "")
+                .replace(" ", "").replace("  ", "");
+        List<String> responseList = Arrays.asList(cleanResponseString.split("\n"));
+        List<LottoStatistics> lottoStatisticsList = new ArrayList<>();
+
+        for (String checkString : responseList) {
+            if (checkString.contains("drwtNoPop[")) {
+                String numberString = checkString.split("=")[0].replaceAll("[^0-9]", "");
+                String countString = checkString.split("=")[1].replaceAll("[^0-9]", "");
+                lottoStatisticsList.add(LottoStatistics.builder()
+                        .num(Integer.parseInt(numberString) + 1)
+                        .count(Integer.parseInt(countString))
+                        .build()
+                );
+            }
+        }
+
+        return lottoStatisticsList;
     }
 }

@@ -1,6 +1,7 @@
 package com.lotteria.api.controller.lotto;
 
 import com.lotteria.api.dto.lotto.LottoHistoryRequestDto;
+import com.lotteria.api.dto.lotto.LottoResultRequestDto;
 import com.lotteria.api.dto.lotto.LottoResultResponseDto;
 import com.lotteria.api.entity.lotto.LottoHistory;
 import com.lotteria.api.service.lotto.LottoHistoryService;
@@ -42,7 +43,7 @@ public class LottoHistoryController {
     }
 
     @GetMapping(value = "/result", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<LottoResultResponseDto> resultLottoHistory(@Valid @RequestBody LottoHistoryRequestDto lottoHistoryRequestDto) {
-        return ResponseEntity.ok().body(this.lottoHistoryService.resultLottoHistory(lottoHistoryRequestDto));
+    public ResponseEntity<LottoResultResponseDto> resultLottoHistory(@Valid @RequestBody LottoResultRequestDto lottoResultRequestDto) {
+        return ResponseEntity.ok().body(this.lottoHistoryService.resultLottoHistory(lottoResultRequestDto));
     }
 }

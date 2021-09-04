@@ -6,6 +6,7 @@ import com.lotteria.api.repository.lotto.LottoStatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class LottoStatisticsService {
     public LottoStatistics editLottoStatistics (LottoStatistics lottoStatistics) {
         LottoStatistics editLottoStatistics = this.searchLottoStatistics(lottoStatistics.getNum());
         editLottoStatistics.setCount(lottoStatistics.getCount());
+        editLottoStatistics.setUpdateDate(new Date());
         return this.lottoStatisticsRepository.save(editLottoStatistics);
     }
 }
