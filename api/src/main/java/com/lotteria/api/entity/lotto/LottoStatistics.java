@@ -1,9 +1,10 @@
 package com.lotteria.api.entity.lotto;
 
 import lombok.*;
-
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Positive;
+import java.util.Date;
 
 @Entity
 @Table(name = "lotto_statistics")
@@ -14,13 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LottoStatistics {
-    @Id
+    @Id @Positive @Max(value = 45)
     @Column(name = "num")
     private int num;
 
     @Column(name = "count")
     private long count;
 
-    @Transient
-    private List<Integer> numberList;
+    @Column(name = "update_date")
+    private Date updateDate;
 }
