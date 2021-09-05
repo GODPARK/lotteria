@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface PensionHistoryRepository extends JpaRepository<PensionHistory, Long> {
     Optional<PensionHistory> findByRoundNum(long roundNum);
     Optional<PensionHistory> findFirstByOrderByRoundNumDesc();
+    boolean existsByRoundNum(long roundNum);
 }

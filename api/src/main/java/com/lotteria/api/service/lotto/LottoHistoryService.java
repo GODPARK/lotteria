@@ -11,6 +11,8 @@ import com.lotteria.api.repository.lotto.LottoHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -40,13 +42,16 @@ public class LottoHistoryService {
         return optionalLottoHistory.get();
     }
 
+    @Cacheable(value = "latest")
     public LottoHistory searchLottoLatest() {
+        logger.info("latest api call");
         Optional<LottoHistory> optionalLottoHistory = lottoHistoryRepository.findFirstByOrderByRoundNumDesc();
         if (optionalLottoHistory.isEmpty()) throw new NotFoundException("lotto number is not found");
         optionalLottoHistory.get().setNumberList();
         return optionalLottoHistory.get();
     }
 
+    @CacheEvict(value = "latest", allEntries = true)
     public LottoHistory saveLottoHistory(LottoHistoryRequestDto lottoHistoryRequestDto) {
         if(!lottoHistoryRequestDto.validationCheck()) throw new BadRequestException("request validation check");
         LottoHistory lottoHistory = lottoHistoryRequestDto.mapEntity();
@@ -57,6 +62,7 @@ public class LottoHistoryService {
         return this.insertUpdateLottoHistory(lottoHistory);
     }
 
+    @CacheEvict(value = "latest", allEntries = true)
     public LottoHistory editLottoHistory(LottoHistoryRequestDto lottoHistoryRequestDto) {
         if(!lottoHistoryRequestDto.validationCheck()) throw new BadRequestException("request validation check");
         LottoHistory lottoHistory = lottoHistoryRequestDto.mapEntity();
