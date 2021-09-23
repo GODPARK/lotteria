@@ -22,17 +22,29 @@ public class QuartzConfiguration {
     @PostConstruct
     public void start() {
         try {
-            JobDetail jobDetail = buildJobDetail(
+            JobDetail jobDetail1 = buildJobDetail(
                     QuartzTestJob.class,
-                    "gradle-test-job",
+                    "gradle-test-job-1",
+                    "hello world",
+                    new HashMap()
+            );
+
+            JobDetail jobDetail2 = buildJobDetail(
+                    QuartzTestJob.class,
+                    "gradle-test-job-2",
                     "hello world",
                     new HashMap()
             );
 
             scheduler.scheduleJob(
-                    jobDetail,
+                    jobDetail1,
                     buildCronJobTrigger("0 * * * * ?")
             );
+            scheduler.scheduleJob(
+                    jobDetail2,
+                    buildCronJobTrigger("0 * * * * ?")
+            );
+
         } catch (SchedulerException schedulerException) {
             this.logger.error("error {}", schedulerException.toString());
         }

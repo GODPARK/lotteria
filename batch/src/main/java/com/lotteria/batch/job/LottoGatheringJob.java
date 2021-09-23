@@ -1,4 +1,4 @@
-package com.lotteria.batch.quartz;
+package com.lotteria.batch.job;
 
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class QuartzTestJob extends QuartzJobBean implements InterruptableJob {
+public class LottoGatheringJob extends QuartzJobBean implements InterruptableJob {
 
     private boolean isInterrupted = false;
     private JobKey jobKey = null;
-    private final Logger logger = LoggerFactory.getLogger("QuartzTestJob");
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Override
     public void interrupt() throws UnableToInterruptJobException {
@@ -24,10 +24,9 @@ public class QuartzTestJob extends QuartzJobBean implements InterruptableJob {
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         this.jobKey = jobExecutionContext.getJobDetail().getKey();
         if (this.isInterrupted) {
-            logger.warn("jobKey: {} is Interrupted.", jobKey);
+            logger.warn("jobkey: {} is Interrupted", jobKey);
             return;
         }
-        JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
-        logger.info("JOB EXECUTE {}", jobKey);
+
     }
 }
